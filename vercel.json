@@ -1,18 +1,11 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "src/app.ts",
-      "use": "@vercel/node"
+      "source": "/(.*)",
+      "destination": "/src/app.ts"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "src/app.ts"
-    }
-  ],
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/rss/(.*)",
@@ -20,8 +13,13 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=3600"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/atom+xml; charset=utf-8"
         }
       ]
     }
-  ]
+  ],
+  "cleanUrls": true
 }
