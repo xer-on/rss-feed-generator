@@ -24,7 +24,7 @@ const getFeed = async (urlEnvVar: string) => {
 
 const getEntertainmentFeed = async (req: Request, res: Response) => {
   try {
-    const feed = await getFeed("BTB_ENTERTAINMENT");
+    const feed = await getFeed("BANGLATRIBUNE_ENTERTAINMENT");
     res.set("Content-Type", "application/atom+xml; charset=utf-8");
     res.send(feed);
   } catch (error: any) {

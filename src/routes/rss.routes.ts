@@ -5,10 +5,18 @@ const router: IRouter = Router();
 
 // Simple root route
 router.get("/", (req: Request, res: Response) => {
-  res.send(`Available RSS feeds:
-    /btb/entertainment
-    /btb/sport
-    /btb/national`);
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const entertainmentUrl = `${baseUrl}/btb/entertainment`;
+  const sportUrl = `${baseUrl}/btb/sport`;
+  const nationalUrl = `${baseUrl}/btb/national`;
+  res.send(`
+    <h1>Available RSS feeds:</h1>
+    <ul>
+      <li><a href="${entertainmentUrl}">${entertainmentUrl}</a></li>
+      <li><a href="${sportUrl}">${sportUrl}</a></li>
+      <li><a href="${nationalUrl}">${nationalUrl}</a></li>
+    </ul>
+  `);
 });
 
 // Generic feed route
