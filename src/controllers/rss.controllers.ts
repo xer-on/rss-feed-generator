@@ -36,7 +36,37 @@ const getEntertainmentFeed = async (req: Request, res: Response) => {
     res.status(500).send(`Error fetching entertainment news: ${error.message}`);
   }
 };
+const getSportFeed = async (req: Request, res: Response) => {
+  try {
+    const feed = await getFeed("BANGLATRIBUNE_SPORT");
+    res.set("Content-Type", "application/atom+xml; charset=utf-8");
+    res.send(feed);
+  } catch (error: any) {
+    console.error("Error fetching sport news:", {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+    });
+    res.status(500).send(`Error fetching sport news: ${error.message}`);
+  }
+};
+const getNationalFeed = async (req: Request, res: Response) => {
+  try {
+    const feed = await getFeed("BANGLATRIBUNE_NATIONAL");
+    res.set("Content-Type", "application/atom+xml; charset=utf-8");
+    res.send(feed);
+  } catch (error: any) {
+    console.error("Error fetching national news:", {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data,
+    });
+    res.status(500).send(`Error fetching national news: ${error.message}`);
+  }
+};
 
 export const RssController = {
   getEntertainmentFeed,
+  getSportFeed,
+  getNationalFeed,
 };

@@ -24,5 +24,7 @@ router.get("/", (req: Request, res: Response) => {
 
 // Specific routes
 router.get("/btb/entertainment", RssController.getEntertainmentFeed);
+router.get("/btb/sport", RssController.getSportFeed);
+router.get("/btb/national", RssController.getNationalFeed);
 
 export default router;
