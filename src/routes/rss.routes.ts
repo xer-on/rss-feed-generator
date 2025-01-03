@@ -7,10 +7,15 @@ const router: IRouter = Router();
 
 router.get("/", (req: Request, res: Response) => {
   const urls = getUrls();
-  const availableRoutes = Array.from(urls.entries()).map(([website, categories]) => {
-    const categoryList = Array.from(categories.keys());
-    return categoryList.map(category => `/${website}/${category}`);
-  }).flat();
+  const validWebsites = ['btb']; // Add other valid website names here
+  
+  const availableRoutes = Array.from(urls.entries())
+    .filter(([website]) => validWebsites.includes(website.toLowerCase()))
+    .map(([website, categories]) => {
+      const categoryList = Array.from(categories.keys())
+        .filter(category => category && category.trim().length > 0);
+      return categoryList.map(category => `/${website}/${category}`);
+    }).flat();
   
   res.send(`Available RSS feeds:\n${availableRoutes.join("\n")}`);
 });
