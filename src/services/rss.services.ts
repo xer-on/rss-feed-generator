@@ -1,3 +1,4 @@
+import axios from "axios";
 import * as cheerio from "cheerio";
 import crypto from "crypto";
 import { NewsItem } from "../types/rss.types";
@@ -52,6 +53,26 @@ interface FeedOptions {
   feedId?: string;
   baseUrl?: string;
 }
+
+export const getFeed = async (urlEnvVar: string) => {
+  const url = process.env[urlEnvVar];
+  if (!url) {
+    throw new Error(`${urlEnvVar} environment variable is not defined`);
+  }
+
+  console.log(`Fetching RSS feed from: ${url}`);
+  const response = await axios.get(url);
+  console.log(`Response status: ${response.status}`);
+
+  const htmlContent = response.data;
+  const newsItems = parseNewsData(htmlContent);
+
+  if (newsItems.length === 0) {
+    console.warn("No news items were parsed from the content");
+  }
+
+  return generateFeed(newsItems);
+};
 
 export function generateFeed(newsItems: NewsItem[], options: FeedOptions = {}) {
   const {
