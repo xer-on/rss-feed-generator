@@ -8,9 +8,11 @@ const router: IRouter = Router();
 router.get("/", (req: Request, res: Response) => {
   const urls = getUrls();
   const availableRoutes = Array.from(urls.entries()).map(([website, categories]) => {
-    return `${website}: ${Array.from(categories.keys()).join(", ")}`;
-  });
-  res.send(`Server is running. Available routes:\n${availableRoutes.join("\n")}`);
+    const categoryList = Array.from(categories.keys());
+    return categoryList.map(category => `/${website}/${category}`);
+  }).flat();
+  
+  res.send(`Available RSS feeds:\n${availableRoutes.join("\n")}`);
 });
 
 router.get(
