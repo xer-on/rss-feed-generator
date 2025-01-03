@@ -4,13 +4,22 @@ import { NewsItem } from "../types/rss.types";
 
 export function parseNewsData(htmlContent: string): NewsItem[] {
   const $ = cheerio.load(htmlContent);
+  console.log('HTML Content Preview:', htmlContent.substring(0, 500));
+  
   const newsItems: NewsItem[] = [];
-
-  //   console.log('Found elements:', $('.contents .each').length);
-
-  $(".contents .each").each((i: number, element: cheerio.Element) => {
+  const elements = $('.contents .each');
+  
+  console.log(`Found ${elements.length} news elements`);
+  
+  elements.each((i: number, element: cheerio.Element) => {
     const $element = $(element);
-
+    
+    console.log(`Processing element ${i}:`, {
+      title: $element.find(".title").text().trim(),
+      subtitle: $element.find(".subtitle").text().trim(),
+      link: $element.find(".link_overlay").attr("href")
+    });
+    
     const title = $element.find(".title").text().trim();
     const subtitle = $element.find(".subtitle").text().trim();
     const description = $element.find(".summery").text().trim();
@@ -38,15 +47,27 @@ export function parseNewsData(htmlContent: string): NewsItem[] {
   return newsItems;
 }
 
-export function generateFeed(newsItems: NewsItem[]) {
+interface FeedOptions {
+  title?: string;
+  feedId?: string;
+  baseUrl?: string;
+}
+
+export function generateFeed(newsItems: NewsItem[], options: FeedOptions = {}) {
+  const {
+    title = "Bangla Tribune News",
+    feedId = "https://www.banglatribune.com/",
+    baseUrl = "https://www.banglatribune.com"
+  } = options;
+
   const now = new Date();
   let atomFeed = `<?xml version="1.0" encoding="UTF-8"?>
   <feed xmlns="http://www.w3.org/2005/Atom">
-    <title>Bangla Tribune News</title>
-    <id>https://www.banglatribune.com/</id>
+    <title>${title}</title>
+    <id>${feedId}</id>
     <updated>${now.toISOString()}</updated>
-    <link href="https://www.banglatribune.com" />
-    <link href="https://www.banglatribune.com/feed" rel="self" />`;
+    <link href="${baseUrl}" />
+    <link href="${baseUrl}/feed" rel="self" />`;
 
   // Add items to feed
   newsItems.forEach((item) => {
