@@ -5,21 +5,12 @@ import { NewsItem } from "../types/rss.types";
 
 export function parseNewsData(htmlContent: string): NewsItem[] {
   const $ = cheerio.load(htmlContent);
-  console.log("HTML Content Preview:", htmlContent.substring(0, 500));
 
   const newsItems: NewsItem[] = [];
   const elements = $(".contents .each");
 
-  console.log(`Found ${elements.length} news elements`);
-
   elements.each((i: number, element: cheerio.Element) => {
     const $element = $(element);
-
-    console.log(`Processing element ${i}:`, {
-      title: $element.find(".title").text().trim(),
-      subtitle: $element.find(".subtitle").text().trim(),
-      link: $element.find(".link_overlay").attr("href"),
-    });
 
     const title = $element.find(".title").text().trim();
     const subtitle = $element.find(".subtitle").text().trim();
